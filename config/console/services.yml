@@ -1,0 +1,49 @@
+# config/services.yaml
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false       # Allows optimizing the container by removing unused services; this also means
+        # fetching services directly from the container via $container->get() won't work.
+        # The best practice is to be explicit about your dependencies anyway.
+
+    swiftmailer.mailer.spool_mailer.spool.custom:
+        class: App\Infrastructure\SwitftMailer\FileSpool
+        arguments:
+            $path: '%kernel.project_dir%/runtime/spool/default'
+
+    enqueue.mail.processor:
+        class: App\Application\Console\Processor\SendMailProcessor
+        public: true
+        arguments:
+            $mailer: '@swiftmailer.mailer.enqueue_mailer'
+            $mustache: '@mustache.engine.mail'
+            $translatorHelper: '@mustache.i18n.helper'
+        tags:
+            - { name: 'enqueue.processor', command: '__command__', processorName: 'mail' }
+
+    mustache.loader.mail:
+        class: '\Mustache_Loader_FilesystemLoader'
+        arguments:
+            $baseDir: '%kernel.project_dir%/views'
+
+    mustache.engine.mail:
+        class: \Mustache_Engine
+        public: true
+        arguments:
+            $options:
+                loader: '@mustache.loader.mail'
+
+    mustache.i18n.helper:
+        class: App\Infrastructure\Mustache\Helpers\TranslatorHelper
+        public: true
+        arguments:
+            $i18nPath: '%kernel.project_dir%/i18n/%s/messages.php'
+
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../../src/*'
+        exclude: '../../src/{Entity,Migrations,Tests,Kernel.php}'

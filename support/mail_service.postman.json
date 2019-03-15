@@ -1,0 +1,132 @@
+{
+    "info": {
+        "_postman_id": "17675e7e-bb35-4fc9-8daa-6d95be1a1a61",
+        "name": "Mail Service",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Get a token",
+            "request": {
+                "auth": {
+                    "type": "basic",
+                    "basic": [
+                        {
+                            "key": "password",
+                            "value": "test",
+                            "type": "string"
+                        },
+                        {
+                            "key": "username",
+                            "value": "test",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "[\"mail.send\", \"mail.all\"]"
+                },
+                "url": {
+                    "raw": "http://127.0.0.1:8080/token",
+                    "protocol": "http",
+                    "host": [
+                        "127",
+                        "0",
+                        "0",
+                        "1"
+                    ],
+                    "port": "8080",
+                    "path": [
+                        "token"
+                    ]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Send an email",
+            "request": {
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NTAyNjQ0NDEsImV4cCI6MTU1MDI3MTY0MSwianRpIjoiNmpId3NySXEzRVFxaXBLa2xWVmRPNSIsInN1YiI6InRlc3QiLCJzY29wZSI6WyJtYWlsLnNlbmQiLCJtYWlsLmFsbCJdfQ.xZbMBW7MUQWRgk9bsKJIckMAgFrGgDusRKujCprqGZ8",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/x-www-form-urlencoded"
+                    }
+                ],
+                "body": {
+                    "mode": "formdata",
+                    "formdata": [
+                        {
+                            "key": "from",
+                            "value": "example@gmail.com",
+                            "type": "text"
+                        },
+                        {
+                            "key": "to",
+                            "value": "example@gmail.com",
+                            "type": "text"
+                        },
+                        {
+                            "key": "subject",
+                            "value": "Testing micro-services",
+                            "type": "text"
+                        },
+                        {
+                            "key": "template",
+                            "value": "hello-world",
+                            "type": "text"
+                        },
+                        {
+                            "key": "data[name]",
+                            "value": "World",
+                            "type": "text"
+                        },
+                        {
+                            "key": "language",
+                            "value": "es",
+                            "type": "text"
+                        },
+                        {
+                            "key": "attachments[]",
+                            "type": "file"
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "http://127.0.0.1:8080/mail/send",
+                    "protocol": "http",
+                    "host": [
+                        "127",
+                        "0",
+                        "0",
+                        "1"
+                    ],
+                    "port": "8080",
+                    "path": [
+                        "mail",
+                        "send"
+                    ]
+                }
+            },
+            "response": []
+        }
+    ]
+}

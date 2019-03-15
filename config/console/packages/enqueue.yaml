@@ -1,0 +1,22 @@
+enqueue:
+    key:
+        transport:
+            dsn: "file://%kernel.project_dir%/runtime/queue"
+        client:
+            traceable_producer:   true
+            prefix:               enqueue
+            separator:            .
+            app_name:             app
+            router_topic:         queue
+            router_queue:         mail
+            router_processor:     null
+            redelivered_delay_time: 0
+            default_queue:        mail
+
+            # The array contains driver specific options
+            driver_options:       []
+        extensions:
+            doctrine_ping_connection_extension: false
+            doctrine_clear_identity_map_extension: false
+            signal_extension:     true
+            reply_extension:      true

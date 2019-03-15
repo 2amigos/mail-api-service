@@ -1,0 +1,70 @@
+{
+    "name": "2amigos/mail-service",
+    "description": "Slim 3 mail API microservice",
+    "type": "project",
+    "keywords": [
+        "slim",
+        "api",
+        "rest",
+        "mail"
+    ],
+    "homepage": "https://github.com/2amigos/mail-service",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "2amigos",
+            "email": "hola@2amigos.us",
+            "homepage": "https://2amigos.us/",
+            "role": "Developer"
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    },
+    "require": {
+        "php": "^7.2",
+        "ext-json": "^1.6",
+        "crell/api-problem": "^2.0",
+        "enqueue/enqueue-bundle": "^0.9.7",
+        "enqueue/fs": "^0.9.2",
+        "gettext/gettext": "^4.6",
+        "gofabian/negotiation-middleware": "^0.1.2",
+        "guzzlehttp/guzzle": "^6.3",
+        "league/flysystem": "^1.0",
+        "league/fractal": "^0.13.0",
+        "league/tactician": "^1.0",
+        "lstrojny/functional-php": "^1.6",
+        "micheh/psr7-cache": "^0.5.0",
+        "monolog/monolog": "^1.17",
+        "mustache/mustache": "^2.12",
+        "slim/slim": "^3.9",
+        "symfony/console": "^4.2",
+        "symfony/dotenv": "^4.2",
+        "symfony/framework-bundle": "^4.2",
+        "symfony/options-resolver": "^4.2",
+        "symfony/swiftmailer-bundle": "^3.2",
+        "symfony/yaml": "^4.2",
+        "tuupola/base62": "^1.0",
+        "tuupola/cors-middleware": "^0.8.0",
+        "tuupola/slim-basic-auth": "^3.2",
+        "tuupola/slim-jwt-auth": "^3.1",
+        "zendframework/zend-inputfilter": "^2.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.10@dev",
+        "overtrue/phplint": "^1.0",
+        "phpunit/phpunit": "^7.3",
+        "roave/security-advisories": "dev-master",
+        "squizlabs/php_codesniffer": "^3.2"
+    }
+}

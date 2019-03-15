@@ -1,0 +1,7 @@
+.env
+vendor/
+.vagrant/
+.phplint-cache
+.idea
+.php_cs.cache
+.phplint.cache

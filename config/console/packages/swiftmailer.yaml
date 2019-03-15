@@ -1,0 +1,29 @@
+swiftmailer:
+    default_mailer: spool_mailer
+    mailers:
+        spool_mailer:
+            transport:            smtp
+            username:             '%env(MAIL_USER)%'
+            password:             '%env(MAIL_PASSWORD)%'
+            host:                 '%env(MAIL_HOST)%'
+            port:                 '%env(MAIL_PORT)%'
+            encryption:           '%env(MAIL_ENCRYPTION)%'
+            auth_mode:            '%env(MAIL_AUTH_MODE)%'
+            sender_address:       '%env(MAIL_NO_REPLY_EMAIL)%'
+            antiflood:
+                threshold:            99
+                sleep:                0
+            spool:
+                type: custom
+        enqueue_mailer:
+            transport:            smtp
+            username:             '%env(MAIL_USER)%'
+            password:             '%env(MAIL_PASSWORD)%'
+            host:                 '%env(MAIL_HOST)%'
+            port:                 '%env(MAIL_PORT)%'
+            encryption:           '%env(MAIL_ENCRYPTION)%'
+            auth_mode:            '%env(MAIL_AUTH_MODE)%'
+            sender_address:       '%env(MAIL_NO_REPLY_EMAIL)%'
+            antiflood:
+                threshold:            99
+                sleep:                1
