@@ -8,11 +8,15 @@
  */
 
 use App\Application\Message\SendMessageCommand;
+use App\Application\Message\SendMessageFsQueueHandler;
 use App\Application\Message\SendMessageSpoolHandler;
 use App\Application\Token\CreateTokenCommand;
 use App\Application\Token\CreateTokenHandler;
+use App\Infrastructure\Enqueue\Message\FsMessageProducer;
 use App\Infrastructure\Mustache\Helpers\TranslatorHelper;
+use App\Infrastructure\SwitftMailer\EnqueueSpool;
 use App\Infrastructure\Tactitian\ContainerLocator;
+use Enqueue\Fs\FsConnectionFactory;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use League\Fractal\Manager;
@@ -25,9 +29,6 @@ use Micheh\Cache\CacheUtil;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
-use App\Infrastructure\Enqueue\Message\FsMessageProducer;
-use Enqueue\Fs\FsConnectionFactory;
-use App\Application\Message\SendMessageFsQueueHandler;
 
 $container = $app->getContainer();
 
@@ -37,7 +38,7 @@ $container['token.create.handler'] = function ($container) {
 
 $container['mail.send.spool.handler'] = function ($container) {
     return new SendMessageSpoolHandler(
-        $container['mailer'],
+        $container['mailer'], // use enqueue.mailer if you wish to use enqueue interop (see services.yaml)
         $container['mustache'],
         $container['mustache.i18n.helper'],
         $container['fs']
@@ -142,6 +143,21 @@ $container['enqueueMessageProducer'] = function ($container) {
     unset($settings['name']);
 
     return new FsMessageProducer($queue, new FsConnectionFactory($settings));
+};
+
+/**
+ * If you are using Interop Enqueue with SwiftMailer's spool
+ */
+$container['enqueue.mailer'] = function ($container) {
+    $settings = $container['settings']['mailer']['queue'];
+    $queue = $settings['name'];
+    unset($settings['name']);
+    $factory = new FsConnectionFactory($settings);
+
+    $spool = new EnqueueSpool($factory->createContext(), $queue);
+    $transport = new Swift_SpoolTransport($spool);
+
+    return new Swift_Mailer($transport);
 };
 
 $container['cache'] = function () {

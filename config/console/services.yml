@@ -9,6 +9,10 @@ services:
         # The best practice is to be explicit about your dependencies anyway.
 
     swiftmailer.mailer.spool_mailer.spool.custom:
+        # class: App\Infrastructure\SwiftMailer\EnqueueSpool # if you wish to use enqueue interop with spool commands
+        # arguments:
+        #   $context: @enqueue.fs.context
+        #   $queue: 'enqueue.app.mail'
         class: App\Infrastructure\SwitftMailer\FileSpool
         arguments:
             $path: '%kernel.project_dir%/runtime/spool/default'
@@ -22,6 +26,14 @@ services:
             $translatorHelper: '@mustache.i18n.helper'
         tags:
             - { name: 'enqueue.processor', command: '__command__', processorName: 'mail' }
+
+    # enqueue.fs.context: # if you wish to use enqueue interop with spool commands
+    #    class: Enqueue\Fs\FsContext
+    #    arguments:
+    #        $storeDir: '%kernel.project_dir%/runtime/queue'
+    #        $preFetchCount: 1
+    #        $chmod: 600
+    #        $pollingInterval: 100
 
     mustache.loader.mail:
         class: '\Mustache_Loader_FilesystemLoader'

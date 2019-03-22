@@ -230,6 +230,66 @@ The one to consume all the messages that go to the queue is `enqueue:consume`:
 $ ./bin/console enqueue:consume mail --no-interaction -vvv --receive-timeout=60000 
 ``` 
 
+### Using the best of both worlds 
+
+The library also comes with a custom spool so you can use [php-enqueue](https://enqueue.forma-pro.com/) with Swiftmailer. 
+
+In order to use it you will have to make some changes on the code: 
+
+#### Modify mail.send.spool.handler
+
+We need to use the already configured `SendMesssageSpoolHandler` to use our custom `EnqueueSpool` component on the 
+`dependencies.php` file:
+
+``` php 
+$container['mail.send.spool.handler'] = function ($container) {
+    return new SendMessageSpoolHandler(
+        $container['enqueue.mailer'], // <--- here is the modification
+        $container['mustache'],
+        $container['mustache.i18n.helper'],
+        $container['fs']
+    );
+};
+
+```
+
+Then on `services.yaml`, we should refactor the file and make it look like this: 
+
+``` yaml 
+
+swiftmailer.mailer.spool_mailer.spool.custom:
+        class: App\Infrastructure\SwiftMailer\EnqueueSpool 
+        arguments:
+           $context: @enqueue.fs.context
+           $queue: 'enqueue.app.mail'
+           
+        # class: App\Infrastructure\SwitftMailer\FileSpool # commented setting! 
+        # arguments:
+        #   $path: '%kernel.project_dir%/runtime/spool/default'
+
+    enqueue.mail.processor:
+        class: App\Application\Console\Processor\SendMailProcessor
+        public: true
+        arguments:
+            $mailer: '@swiftmailer.mailer.enqueue_mailer'
+            $mustache: '@mustache.engine.mail'
+            $translatorHelper: '@mustache.i18n.helper'
+        tags:
+            - { name: 'enqueue.processor', command: '__command__', processorName: 'mail' }
+
+    enqueue.fs.context: 
+        class: Enqueue\Fs\FsContext
+        arguments:
+            $storeDir: '%kernel.project_dir%/runtime/queue'
+            $preFetchCount: 1
+            $chmod: 600
+            $pollingInterval: 100
+
+
+```
+
+That's it, the way to use it simply follow the guidelines of `sending an email from/to the spool` above.
+
 ## Contributing 
 
 To contribute, please read our [CONTRIBUTION guidelines](CONTRIBUTING.md).
