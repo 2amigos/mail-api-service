@@ -239,7 +239,7 @@ In order to use it you will have to make some changes on the code:
 #### Modify mail.send.spool.handler
 
 We need to use the already configured `SendMesssageSpoolHandler` to use our custom `EnqueueSpool` component on the 
-`dependencies.php` file:
+`./config/api/dependencies.php` file:
 
 ``` php 
 $container['mail.send.spool.handler'] = function ($container) {
@@ -253,7 +253,9 @@ $container['mail.send.spool.handler'] = function ($container) {
 
 ```
 
-Then on `services.yaml`, we should refactor the file and make it look like this: 
+#### Modify services.yaml
+
+Then on `./config/console/services.yaml`, we should refactor the file and make it look like this: 
 
 ``` yaml 
 
